@@ -1,15 +1,16 @@
 package com.company;
 
+import java.io.IOException;
 import java.util.*;
 
 public class Main {
 
     public static void main(String[] args) {
 
-        System.out.println(rollDice());
+        game();
     }
 
-    public static void game(){
+    public static void game() {
 
         System.out.println("MONOPOLY");
         System.out.println();
@@ -17,6 +18,8 @@ public class Main {
         //Preparing for the game
 
         int numberOfPlayers = selectNumberOfPlayers();
+        HashMap<Integer, String> playersNames = enterPlayersNames(numberOfPlayers);
+        HashMap<String, Integer> playersCurrentPositionOnGameBoard = createHashMapForInitialPlayerPositionsOnGameBoard(playersNames);
         int housesInBank = 34;
         int hotelsInBank = 13;
 
@@ -26,16 +29,19 @@ public class Main {
 
         //Start the game
 
+        showMessageForStartTheGame(gameSquares);
 
+        moveTracker(numberOfPlayers, playersNames, gameSquares, playersCurrentPositionOnGameBoard);
 
+        
     }
 
-    public static HashMap<Integer,String> prepareGameSquares() {
+    public static HashMap<Integer, String> prepareGameSquares() {
 
         HashMap<Integer, String> gameSquares = new HashMap<>();
 
         gameSquares.put(1, "START/GO");
-        gameSquares.put(2,"Old Kent Road");
+        gameSquares.put(2, "Old Kent Road");
         gameSquares.put(3, "COMMUNITY CHEST");
         gameSquares.put(4, "Whitechapel Road");
         gameSquares.put(5, "INCOME TAX");
@@ -146,15 +152,53 @@ public class Main {
 
             if (numberOfPlayers >= 2 && numberOfPlayers <= 4) {
                 return numberOfPlayers;
-            } else {
+            }
+
+            else {
                 System.out.println("The number of players must be between 2 and 4!");
                 return selectNumberOfPlayers();
             }
         }
+
         catch (InputMismatchException e) {
             System.out.println("Wrong input! Enter digit!");
             return selectNumberOfPlayers();
         }
+    }
+
+    public static HashMap<Integer, String> enterPlayersNames(int numberOfPlayers) {
+        Scanner sc = new Scanner(System.in);
+
+        HashMap<Integer, String> playersNames = new HashMap<>();
+
+        System.out.println("Now, enter your names...");
+
+        for (int i = 1; i <= numberOfPlayers; i++) {
+            System.out.print("Player " + i + ", enter your name: ");
+            String playerName = sc.nextLine();
+
+            if (playerName.length() < 2) {
+                System.out.println("Name is too short! Please, enter a valid name!");
+                i--;
+                continue;
+            }
+
+            else if (playersNames.containsValue(playerName)) {
+                System.out.println("Name is already exists! Please, enter a different name!");
+                i--;
+                continue;
+            }
+
+            playersNames.put(i, playerName);
+        }
+
+        return playersNames;
+    }
+
+    public static void showMessageForStartTheGame(HashMap<Integer, String> gameSquares) {
+        System.out.println("\nYou are ready to start the game!");
+        System.out.println("At the moment, you are all in position \"" + gameSquares.get(1) + "\".");
+        System.out.println("Let's start!");
     }
 
     public static int rollDice() {
@@ -164,8 +208,60 @@ public class Main {
         int dice1 = rand.nextInt((6 - 1) + 1) + 1;
         int dice2 = rand.nextInt((6 - 1) + 1) + 1;
 
-        int totalNumberOfMoves = dice1 + dice2;
-
-        return totalNumberOfMoves;
+        return dice1 + dice2;
     }
+
+
+    public static void moveTracker(int numberOfPlayers, HashMap<Integer, String> playersNames, HashMap<Integer, String> gameSquares, HashMap<String, Integer> playersCurrentPositionOnGameBoard) {
+        for (int i = 1; i <= numberOfPlayers; i++) {
+            System.out.print("\n" + playersNames.get(i) + ", it's your turn! Press \"enter\" to roll the dice. ");
+            if(isPlayerPressEnter()){
+                int resultAfterRollingTheDice = rollDice();
+                System.out.println("You threw " + resultAfterRollingTheDice + ". You are now on " + findCurrentPlayerPositionOnGameBoard(gameSquares, playersNames.get(i), resultAfterRollingTheDice, playersCurrentPositionOnGameBoard));
+            }
+
+            else {
+                System.out.println("\nYou pressed wrong button/s! Let's try again...");
+                i--;
+                continue;
+            }
+
+            if(i == numberOfPlayers){
+                i = 0;
+            }
+        }
+    }
+
+    public static boolean isPlayerPressEnter() {
+        Scanner sc = new Scanner(System.in);
+        String input = sc.nextLine();
+
+        if (input.equals("")) {
+            return true;
+        }
+
+        else
+            return false;
+
+
+    }
+
+    public static HashMap<String, Integer> createHashMapForInitialPlayerPositionsOnGameBoard(HashMap<Integer, String> playersNames) {
+        HashMap<String, Integer> playersPositionOnGameBoard = new HashMap<>();
+        int startPositionOnGameBoard = 1;
+
+        for(int i = 1; i <= playersNames.size(); i++) {
+            String playerName = playersNames.get(i);
+            playersPositionOnGameBoard.put(playerName, startPositionOnGameBoard);
+        }
+
+        return playersPositionOnGameBoard;
+    }
+
+    public static String findCurrentPlayerPositionOnGameBoard(HashMap<Integer, String> gameSquares, String playerName, int resultAfterRollingTheDice, HashMap<String, Integer> playersCurrentPositionOnGameBoard) {
+        int newPosition = playersCurrentPositionOnGameBoard.get(playerName) + resultAfterRollingTheDice;
+        playersCurrentPositionOnGameBoard.replace(playerName, newPosition);
+        return gameSquares.get(newPosition);
+    }
+
 }
