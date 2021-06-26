@@ -217,7 +217,7 @@ public class Main {
             System.out.print("\n" + playersNames.get(i) + ", it's your turn! Press \"enter\" to roll the dice. ");
             if(isPlayerPressEnter()){
                 int resultAfterRollingTheDice = rollDice();
-                System.out.println("You threw " + resultAfterRollingTheDice + ". You are now on " + findCurrentPlayerPositionOnGameBoard(gameSquares, playersNames.get(i), resultAfterRollingTheDice, playersCurrentPositionOnGameBoard));
+                System.out.println("You threw " + resultAfterRollingTheDice + ". You are now on \"" + findCurrentPlayerPositionOnGameBoard(gameSquares, playersNames.get(i), resultAfterRollingTheDice, playersCurrentPositionOnGameBoard) + "\".");
             }
 
             else {
@@ -242,8 +242,6 @@ public class Main {
 
         else
             return false;
-
-
     }
 
     public static HashMap<String, Integer> createHashMapForInitialPlayerPositionsOnGameBoard(HashMap<Integer, String> playersNames) {
@@ -260,7 +258,13 @@ public class Main {
 
     public static String findCurrentPlayerPositionOnGameBoard(HashMap<Integer, String> gameSquares, String playerName, int resultAfterRollingTheDice, HashMap<String, Integer> playersCurrentPositionOnGameBoard) {
         int newPosition = playersCurrentPositionOnGameBoard.get(playerName) + resultAfterRollingTheDice;
+
+        if(newPosition > 40){
+            newPosition = newPosition - 40;
+        }
+
         playersCurrentPositionOnGameBoard.replace(playerName, newPosition);
+
         return gameSquares.get(newPosition);
     }
 
