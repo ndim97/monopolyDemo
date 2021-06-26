@@ -392,8 +392,9 @@ public class Main {
 
             Scanner sc = new Scanner(System.in);
 
-            try{
+            try {
                 int playerChoice = sc.nextInt();
+
 
                 if(playerChoice < 1 || playerChoice > 2) {
                     System.out.println("Wrong input! You must select one of the options listed! Try again!");
@@ -413,8 +414,11 @@ public class Main {
                         break;
 
                     case 2:
-                        auction(playerCurrentPositionOnGameBoard,  playerName, playerIndex,  squareOwners,  gameSquares,
-                             playersMoney,  squaresPrice, numberOfPlayers,  playersNames);
+                        System.out.println("\nAUCTION! All players will bid for \"" + squareName + "\". " +
+                                "Starting price is $ " + squaresPrice.get(squareIndex) + ". \n");
+
+                        auction(playerCurrentPositionOnGameBoard, playerName, squareOwners, gameSquares,
+                                    playersMoney, squaresPrice, numberOfPlayers, playersNames);
                         break;
                 }
             }
@@ -428,76 +432,99 @@ public class Main {
     }
 
     public static void auction(HashMap<String, Integer> playerCurrentPositionOnGameBoard, String playerName,
-                               int playerIndex, HashMap<Integer, String> squareOwners, HashMap<Integer, String> gameSquares,
+                               HashMap<Integer, String> squareOwners, HashMap<Integer, String> gameSquares,
                                HashMap<Integer, Integer> playersMoney, HashMap<Integer, Integer> squaresPrice,
-                               int numberOfPlayers, HashMap<Integer, String> playersNames) {
+                               int numberOfPlayers, HashMap<Integer, String> playersNames) throws InputMismatchException {
 
         int squareIndex = playerCurrentPositionOnGameBoard.get(playerName);
         String squareName = gameSquares.get(squareIndex);
-
-        System.out.println("\nAUCTION! All players will bid for \"" + squareName + "\". " +
-                "Starting price is $ " + squaresPrice.get(squareIndex) + ". \n" );
 
         Scanner sc = new Scanner(System.in);
 
         int playerChoice;
         int amount;
+        int currentBiggestOffer = squaresPrice.get(squareIndex);
 
         HashMap<Integer, Integer> playersAnswers = new HashMap<>();
 
-        for(int i = 1; i <= numberOfPlayers; i++) {
-            System.out.println(playersNames.get(i) + ", choose option:");
-            System.out.println("1. Enter an amount in $.");
-            System.out.println("2. Skip.");
-            System.out.print("Choose option: ");
+        try {
+            for (int i = 1; i <= numberOfPlayers; i++) {
+                System.out.println(playersNames.get(i) + ", choose option:");
+                System.out.println("1. Enter an amount in $.");
+                System.out.println("2. Skip.");
+                System.out.print("Choose option: ");
 
-            playerChoice = sc.nextInt();
+                playerChoice = sc.nextInt();
 
-            switch (playerChoice) {
-                case 1:
-                    System.out.print("Enter an amount in $: ");
-                    amount = sc.nextInt();
-                    playersAnswers.put(i, amount);
-                    System.out.println();
-                    break;
 
-                case 2:
-                    System.out.println("Maybe you'll be sorry! \n");
-                    playersAnswers.put(i, 0);
-                    break;
-            }
-
-            if(i == numberOfPlayers) {
-                int counter = 0;
-
-                for(int j = 1; j <= numberOfPlayers; j++){
-                    if(playersAnswers.get(j) != 0) {
-                        counter++;
-                    }
+                if (playerChoice < 1 || playerChoice > 2) {
+                    System.out.println("Wrong input! You must select one of the options listed! Try again!");
+                    i--;
+                    continue;
                 }
 
-                if(counter > 1){
-                    i = 0;
+                switch (playerChoice) {
+                    case 1:
+                        System.out.print("Enter an amount in $: ");
+                        amount = sc.nextInt();
+
+                        if(amount <= currentBiggestOffer){
+                            System.out.println("You must offer a larger amount!");
+                            playersAnswers.put(i, 0);
+                        }
+
+                        else {
+                            currentBiggestOffer = amount;
+                            playersAnswers.put(i, amount);
+                            System.out.println();
+                        }
+                        break;
+
+                    case 2:
+                        System.out.println("Maybe you'll be sorry! \n");
+                        playersAnswers.put(i, 0);
+                        break;
                 }
 
-                else if(counter == 1) {
-                    for(int k = 1; k <= playersAnswers.size(); k++) {
-                        if(playersAnswers.get(k) != 0) {
-                            String nameOfPlayer = playersNames.get(k);
-                            squareOwners.replace(squareIndex, nameOfPlayer);
+                if (i == numberOfPlayers) {
+                    int counter = 0;
 
-                            int updatePlayerMoney = playersMoney.get(k) - playersAnswers.get(k);
-                            playersMoney.replace(k, updatePlayerMoney);
-                            System.out.println(nameOfPlayer + " won the auction! He/She successfully bought \"" + squareName + "\".");
-                            System.out.println("--------------------------------------------------------------------------");
+                    for (int j = 1; j <= numberOfPlayers; j++) {
+                        if (playersAnswers.get(j) != 0) {
+                            counter++;
                         }
                     }
-                }
 
-                else if (counter == 0) {
-                    System.out.println("No one wanted to buy \"" + squareName + "\". For now it remains for bank.");
+                    if (counter > 1) {
+                        i = 0;
+                    }
+
+                    else if (counter == 1) {
+                        for (int k = 1; k <= playersAnswers.size(); k++) {
+                            if (playersAnswers.get(k) != 0) {
+                                String nameOfPlayer = playersNames.get(k);
+                                squareOwners.replace(squareIndex, nameOfPlayer);
+
+                                int updatePlayerMoney = playersMoney.get(k) - playersAnswers.get(k);
+                                playersMoney.replace(k, updatePlayerMoney);
+                                System.out.println(nameOfPlayer + " won the auction! He/She successfully bought \"" + squareName + "\".");
+                                System.out.println("--------------------------------------------------------------------------");
+                            }
+                        }
+                    }
+
+                    else if (counter == 0) {
+                        System.out.println("No one wanted to buy \"" + squareName + "\". For now it remains for bank.");
+                    }
                 }
             }
+        }
+
+        catch (InputMismatchException e) {
+            System.out.println("Fatal wrong input! Bidding starts again!");
+
+            auction(playerCurrentPositionOnGameBoard, playerName, squareOwners, gameSquares,
+                    playersMoney, squaresPrice, numberOfPlayers, playersNames);
         }
     }
 
