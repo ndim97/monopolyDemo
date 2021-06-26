@@ -1,6 +1,5 @@
 package com.company;
 
-import java.io.IOException;
 import java.util.*;
 
 public class Main {
@@ -20,6 +19,7 @@ public class Main {
         int numberOfPlayers = selectNumberOfPlayers();
         HashMap<Integer, String> playersNames = enterPlayersNames(numberOfPlayers);
         HashMap<String, Integer> playersCurrentPositionOnGameBoard = createHashMapForInitialPlayerPositionsOnGameBoard(playersNames);
+        HashMap<Integer, Integer> playersMoney = prepareInitialPlayersMoney(numberOfPlayers);
         int housesInBank = 34;
         int hotelsInBank = 13;
 
@@ -31,7 +31,7 @@ public class Main {
 
         showMessageForStartTheGame(gameSquares);
 
-        moveTracker(numberOfPlayers, playersNames, gameSquares, playersCurrentPositionOnGameBoard);
+        moveTracker(numberOfPlayers, playersNames, gameSquares, playersCurrentPositionOnGameBoard, playersMoney);
 
         
     }
@@ -212,12 +212,20 @@ public class Main {
     }
 
 
-    public static void moveTracker(int numberOfPlayers, HashMap<Integer, String> playersNames, HashMap<Integer, String> gameSquares, HashMap<String, Integer> playersCurrentPositionOnGameBoard) {
+    public static void moveTracker(int numberOfPlayers, HashMap<Integer, String> playersNames,
+                                   HashMap<Integer, String> gameSquares,
+                                   HashMap<String, Integer> playersCurrentPositionOnGameBoard,
+                                   HashMap<Integer, Integer> playersMoney) {
         for (int i = 1; i <= numberOfPlayers; i++) {
             System.out.print("\n" + playersNames.get(i) + ", it's your turn! Press \"enter\" to roll the dice. ");
+
             if(isPlayerPressEnter()){
                 int resultAfterRollingTheDice = rollDice();
-                System.out.println("You threw " + resultAfterRollingTheDice + ". You are now on \"" + findCurrentPlayerPositionOnGameBoard(gameSquares, playersNames.get(i), resultAfterRollingTheDice, playersCurrentPositionOnGameBoard) + "\".");
+                System.out.println("You threw " + resultAfterRollingTheDice + ". You are now on \"" +
+                        findCurrentPlayerPositionOnGameBoard(gameSquares, playersNames.get(i), i,
+                                resultAfterRollingTheDice, playersCurrentPositionOnGameBoard, playersMoney) + "\".");
+
+                System.out.println("You have $ " + playersMoney.get(i));
             }
 
             else {
@@ -256,16 +264,41 @@ public class Main {
         return playersPositionOnGameBoard;
     }
 
-    public static String findCurrentPlayerPositionOnGameBoard(HashMap<Integer, String> gameSquares, String playerName, int resultAfterRollingTheDice, HashMap<String, Integer> playersCurrentPositionOnGameBoard) {
+    public static String findCurrentPlayerPositionOnGameBoard(HashMap<Integer, String> gameSquares,
+                                                              String playerName, int playerIndex,
+                                                              int resultAfterRollingTheDice,
+                                                              HashMap<String, Integer> playersCurrentPositionOnGameBoard,
+                                                              HashMap<Integer, Integer> playersMoney) {
         int newPosition = playersCurrentPositionOnGameBoard.get(playerName) + resultAfterRollingTheDice;
 
         if(newPosition > 40){
             newPosition = newPosition - 40;
+            updatePlayerMoneyAfterPassGo(playersMoney, playerIndex);
         }
 
         playersCurrentPositionOnGameBoard.replace(playerName, newPosition);
 
         return gameSquares.get(newPosition);
     }
+
+    public static HashMap<Integer, Integer> prepareInitialPlayersMoney(int numberOfPlayers) {
+        HashMap<Integer, Integer> playersMoney = new HashMap<>();
+
+        for(int i = 1; i <= numberOfPlayers; i++) {
+            playersMoney.put(i, 1500);
+        }
+
+        return playersMoney;
+    }
+
+    public static int updatePlayerMoneyAfterPassGo(HashMap<Integer, Integer> playersMoney, int playerIndex) {
+        int updatePlayerMoney = playersMoney.get(playerIndex) + 200;
+        playersMoney.replace(playerIndex, updatePlayerMoney);
+
+        return playersMoney.get(playerIndex);
+    }
+
+
+
 
 }
