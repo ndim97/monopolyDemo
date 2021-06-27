@@ -19,16 +19,11 @@ public class Main {
         HashMap<Integer, String> playersNames = enterPlayersNames(numberOfPlayers);
         HashMap<String, Integer> playersCurrentPositionOnGameBoard = createHashMapForInitialPlayerPositionsOnGameBoard(playersNames);
         HashMap<Integer, Integer> playersMoney = prepareInitialPlayersMoney(numberOfPlayers);
-
-//        int housesInBank = 34;
-//        int hotelsInBank = 13;
-
         HashMap<Integer, String> gameSquares = prepareGameSquares();
         HashMap<Integer, Integer> squaresPrice = prepareSquaresPrice();
         HashMap<Integer, Integer> squaresRent  = prepareSquaresRent();
         Stack<String> chanceCards = prepareChanceCards();
         Stack<String> communityChestCards = prepareCommunityChestCards();
-
         HashMap<Integer, String> squaresOwners = createHashMapForInitialSquareOwners(gameSquares);
 
         //Start the game
@@ -36,9 +31,7 @@ public class Main {
         showMessageForStartTheGame(gameSquares);
 
         moveTracker(numberOfPlayers, playersNames, gameSquares, playersCurrentPositionOnGameBoard,
-                playersMoney, squaresOwners, squaresPrice, squaresRent, chanceCards);
-
-
+                playersMoney, squaresOwners, squaresPrice, squaresRent, chanceCards, communityChestCards);
     }
 
     public static HashMap<Integer, String> prepareGameSquares() {
@@ -93,24 +86,11 @@ public class Main {
 
         Stack<String> chanceCards = new Stack<>();
 
-//        chanceCards.push("Advance to \"Trafalgar Square\". Collect $200");
-//        chanceCards.push("Advance to \"Marylebone Station\". If you pass Go, collect $200");
-//        chanceCards.push("Advance to the nearest Railroad. If unowned, you may buy it from the Bank. " +
-//                "If owned, pay wonder twice the rental to which they are otherwise entitled");
-//        chanceCards.push("Get Out of Jail Free! (You can keep the card or sell it.)");
-//        chanceCards.push("Advance to \"Mayfair\".");
         chanceCards.push("Advance to Go. (Collect $200))");
         chanceCards.push("Pay the housing tax -$150");
         chanceCards.push("Bank pays you dividend of $50");
         chanceCards.push("Go to Jail! (Go directly to Jail, do not pass Go, do not collect $200)");
-//        chanceCards.push("You have won a crossword puzzle contest. Collect 100 $");
-//        chanceCards.push("Make general repairs on all your property. For each house pay $25. " +
-//                "For each hotel pay $100");
-//        chanceCards.push("Your building loan matures. Collect $150");
         chanceCards.push("Go Back 3 Spaces");
-//        chanceCards.push(" Advance token to nearest Utility. If unowned, you may buy it from the Bank. " +
-//                "If owned, throw dice and pay owner a total ten times amount thrown.");
-//        chanceCards.push("Advance to \"Pall Mall\". If you pass Go, collect $200");
         chanceCards.push("Speeding fine $15");
 
         //Shuffle the cards
@@ -124,20 +104,10 @@ public class Main {
         Stack<String> communityChestCards = new Stack<>();
 
         communityChestCards.push("From sale of stock you get $50.");
-//        communityChestCards.push("Income tax refund. Collect $20.");
-//        communityChestCards.push("You have won second prize in a beauty contest. Collect $10.");
         communityChestCards.push("Bank error in your favour. Collect $200.");
-//        communityChestCards.push("It is your happy day! Collect $10 from every player.");
         communityChestCards.push("Pay school fees of $50.");
-//        communityChestCards.push("Receive $25 consultancy fee.");
         communityChestCards.push("You inherit $100.");
-//        communityChestCards.push("Get Out of Jail Free! (You can keep the card or sell it.)");
         communityChestCards.push("Holiday fund matures. Receive $100");
-//        communityChestCards.push("Advance to Go. (Collect £200)");
-//        communityChestCards.push("Pay a fine of $10 or get a CHANCE card.");
-//        communityChestCards.push("Go to Jail! (Go directly to jail, do not pass Go, do not collect £200.)");
-//        communityChestCards.push("Life insurance matures. Collect $100");
-//        communityChestCards.push("Pay housing fees of $100)");
         communityChestCards.push("Drunkenness fine $15");
 
         //Shuffle the cards
@@ -208,7 +178,7 @@ public class Main {
         squaresRent.put(10, 8);
         squaresRent.put(11, null);
         squaresRent.put(12, 10);
-        squaresRent.put(13, 4);
+        squaresRent.put(13, 5);
         squaresRent.put(14, 10);
         squaresRent.put(15, 12);
         squaresRent.put(16, 25);
@@ -224,7 +194,7 @@ public class Main {
         squaresRent.put(26, 25);
         squaresRent.put(27, 22);
         squaresRent.put(28, 22);
-        squaresRent.put(29, 4);
+        squaresRent.put(29, 5);
         squaresRent.put(30, 22);
         squaresRent.put(31, null);
         squaresRent.put(32, 26);
@@ -251,11 +221,15 @@ public class Main {
 
             if (numberOfPlayers >= 2 && numberOfPlayers <= 4) {
                 return numberOfPlayers;
-            } else {
+            }
+
+            else {
                 System.out.println("The number of players must be between 2 and 4!");
                 return selectNumberOfPlayers();
             }
-        } catch (InputMismatchException e) {
+        }
+
+        catch (InputMismatchException e) {
             System.out.println("Wrong input! Enter digit!");
             return selectNumberOfPlayers();
         }
@@ -276,7 +250,9 @@ public class Main {
                 System.out.println("\nName is too short! Please, enter a valid name!\n");
                 i--;
                 continue;
-            } else if (playersNames.containsValue(playerName)) {
+            }
+
+            else if (playersNames.containsValue(playerName)) {
                 System.out.println("\nName is already exists! Please, enter a different name!\n");
                 i--;
                 continue;
@@ -304,15 +280,17 @@ public class Main {
         return dice1 + dice2;
     }
 
-
-    public static void moveTracker(int numberOfPlayers, HashMap<Integer, String> playersNames,
+    public static void moveTracker(int numberOfPlayers,
+                                   HashMap<Integer, String> playersNames,
                                    HashMap<Integer, String> gameSquares,
                                    HashMap<String, Integer> playersCurrentPositionOnGameBoard,
                                    HashMap<Integer, Integer> playersMoney,
                                    HashMap<Integer, String> squareOwners,
                                    HashMap<Integer, Integer> squaresPrice,
                                    HashMap<Integer, Integer> squaresRent,
-                                   Stack<String> chanceCards) {
+                                   Stack<String> chanceCards,
+                                   Stack<String> communityChestCards) {
+
         for (int i = 1; i <= numberOfPlayers; i++) {
             System.out.print("\n" + playersNames.get(i) + ", it's your turn! Press \"enter\" to roll the dice. ");
 
@@ -325,10 +303,13 @@ public class Main {
                 System.out.println("You have $ " + playersMoney.get(i));
 
                 playerOptions(playersCurrentPositionOnGameBoard, playersNames.get(i), i, squareOwners,
-                        gameSquares, playersMoney, squaresPrice, numberOfPlayers, playersNames, squaresRent, chanceCards);
+                        gameSquares, playersMoney, squaresPrice, numberOfPlayers, playersNames, squaresRent,
+                        chanceCards, communityChestCards);
 
 
-            } else {
+            }
+
+            else {
                 System.out.println("\nYou pressed wrong button/s! Let's try again...");
                 i--;
                 continue;
@@ -346,12 +327,15 @@ public class Main {
 
         if (input.equals("")) {
             return true;
-        } else
+        }
+
+        else
             return false;
     }
 
     public static HashMap<String, Integer> createHashMapForInitialPlayerPositionsOnGameBoard(HashMap<Integer, String> playersNames) {
         HashMap<String, Integer> playersPositionOnGameBoard = new HashMap<>();
+
         int startPositionOnGameBoard = 1;
 
         for (int i = 1; i <= playersNames.size(); i++) {
@@ -367,6 +351,7 @@ public class Main {
                                                               int resultAfterRollingTheDice,
                                                               HashMap<String, Integer> playersCurrentPositionOnGameBoard,
                                                               HashMap<Integer, Integer> playersMoney) {
+
         int newPosition = playersCurrentPositionOnGameBoard.get(playerName) + resultAfterRollingTheDice;
 
         if (newPosition > 40) {
@@ -406,12 +391,18 @@ public class Main {
         return squareOwners;
     }
 
-    public static void playerOptions(HashMap<String, Integer> playerCurrentPositionOnGameBoard, String playerName,
-                                     int playerIndex, HashMap<Integer, String> squareOwners, HashMap<Integer, String> gameSquares,
-                                     HashMap<Integer, Integer> playersMoney, HashMap<Integer, Integer> squaresPrice,
-                                     int numberOfPlayers, HashMap<Integer, String> playersNames,
+    public static void playerOptions(HashMap<String, Integer> playerCurrentPositionOnGameBoard,
+                                     String playerName,
+                                     int playerIndex,
+                                     HashMap<Integer, String> squareOwners,
+                                     HashMap<Integer, String> gameSquares,
+                                     HashMap<Integer, Integer> playersMoney,
+                                     HashMap<Integer, Integer> squaresPrice,
+                                     int numberOfPlayers,
+                                     HashMap<Integer, String> playersNames,
                                      HashMap<Integer, Integer> squaresRent,
-                                     Stack<String> chanceCards) {
+                                     Stack<String> chanceCards,
+                                     Stack<String> communityChestCards) {
 
         //playerCurrentPositionOnGameBoard.get(playerName) returns values from 1 to 40
 
@@ -429,6 +420,7 @@ public class Main {
         else if (squareOwners.get(squareIndex) != null &&
                 !squareOwners.get(squareIndex).equals(playerName) &&
                 squaresPrice.get(squareIndex) != null &&
+                squareIndex != 13 && squareIndex != 29 &&
                 (playersMoney.get(playerIndex) > squaresRent.get(squareIndex))) {
 
             playerIsOnOwnedSquareWithEnoughMoney(playerCurrentPositionOnGameBoard, playerName, playerIndex, squareOwners, gameSquares,
@@ -449,12 +441,59 @@ public class Main {
                     playersMoney, squaresPrice, numberOfPlayers, playersNames, squareIndex, squareName, squaresRent, chanceCards);
         }
 
+        else if(squareIndex == 3 || squareIndex == 18 || squareIndex == 34) {
+
+            playerIsOnCommunityChestSquare(playerCurrentPositionOnGameBoard, playerName, playerIndex, squareOwners, gameSquares,
+                    playersMoney, squaresPrice, numberOfPlayers, playersNames, squareIndex, squareName, squaresRent, communityChestCards);
+        }
+
+        else if(squareIndex == 5) {
+
+            playerIsOnIncomeTaxSquare(playerCurrentPositionOnGameBoard, playerName, playerIndex, squareOwners, gameSquares,
+                    playersMoney, squaresPrice, numberOfPlayers, playersNames, squareIndex, squareName);
+        }
+
+        else if(squareIndex == 11) {
+
+            playerIsOnJustVisitingSquare(playerCurrentPositionOnGameBoard, playerName, playerIndex, squareOwners, gameSquares,
+                    playersMoney, squaresPrice, numberOfPlayers, playersNames, squareIndex, squareName);
+        }
+
+        else if(squareIndex == 21) {
+
+            playerIsOnFreeParkingSquare(playerCurrentPositionOnGameBoard, playerName, playerIndex, squareOwners, gameSquares,
+                    playersMoney, squaresPrice, numberOfPlayers, playersNames, squareIndex, squareName);
+        }
+
+        else if(squareIndex == 31) {
+
+            //write code for jail here
+        }
+
+        else if(squareIndex == 39) {
+
+            playerIsOnSuperTaxSquare(playerCurrentPositionOnGameBoard, playerName, playerIndex, squareOwners, gameSquares,
+                    playersMoney, squaresPrice, numberOfPlayers, playersNames, squareIndex, squareName);
+        }
+
+        else if(squareOwners.get(squareIndex) != null &&
+                !squareOwners.get(squareIndex).equals(playerName) &&
+                squareIndex == 13 || squareIndex == 29) {
+
+            playerIsOnUtilitySquare(playerCurrentPositionOnGameBoard, playerName, playerIndex, squareOwners, gameSquares,
+                    playersMoney, squaresPrice, numberOfPlayers, playersNames, squareIndex, squareName, squaresRent);
+        }
+
     }
 
-    public static void playerIsOnUnownedSquareWithEnoughMoney(HashMap<String, Integer> playerCurrentPositionOnGameBoard, String playerName,
-                                                              int playerIndex, HashMap<Integer, String> squareOwners, HashMap<Integer, String> gameSquares,
-                                                              HashMap<Integer, Integer> playersMoney, HashMap<Integer, Integer> squaresPrice,
-                                                              int numberOfPlayers, HashMap<Integer, String> playersNames,
+    public static void playerIsOnUnownedSquareWithEnoughMoney(HashMap<String, Integer> playerCurrentPositionOnGameBoard,
+                                                              String playerName, int playerIndex,
+                                                              HashMap<Integer, String> squareOwners,
+                                                              HashMap<Integer, String> gameSquares,
+                                                              HashMap<Integer, Integer> playersMoney,
+                                                              HashMap<Integer, Integer> squaresPrice,
+                                                              int numberOfPlayers,
+                                                              HashMap<Integer, String> playersNames,
                                                               int squareIndex, String squareName,
                                                               HashMap<Integer, Integer> squaresRent) {
         System.out.println("\nYour options now are: ");
@@ -510,10 +549,14 @@ public class Main {
         }
     }
 
-    public static void auction(HashMap<String, Integer> playerCurrentPositionOnGameBoard, String playerName,
-                               HashMap<Integer, String> squareOwners, HashMap<Integer, String> gameSquares,
-                               HashMap<Integer, Integer> playersMoney, HashMap<Integer, Integer> squaresPrice,
-                               int numberOfPlayers, HashMap<Integer, String> playersNames) throws InputMismatchException {
+    public static void auction(HashMap<String, Integer> playerCurrentPositionOnGameBoard,
+                               String playerName,
+                               HashMap<Integer, String> squareOwners,
+                               HashMap<Integer, String> gameSquares,
+                               HashMap<Integer, Integer> playersMoney,
+                               HashMap<Integer, Integer> squaresPrice,
+                               int numberOfPlayers,
+                               HashMap<Integer, String> playersNames) throws InputMismatchException {
 
         int squareIndex = playerCurrentPositionOnGameBoard.get(playerName);
         String squareName = gameSquares.get(squareIndex);
@@ -600,12 +643,16 @@ public class Main {
         }
     }
 
-    public static void playerIsOnOwnedSquareWithEnoughMoney(HashMap<String, Integer> playerCurrentPositionOnGameBoard, String playerName,
-                                                              int playerIndex, HashMap<Integer, String> squareOwners, HashMap<Integer, String> gameSquares,
-                                                              HashMap<Integer, Integer> playersMoney, HashMap<Integer, Integer> squaresPrice,
-                                                              int numberOfPlayers, HashMap<Integer, String> playersNames,
-                                                              int squareIndex, String squareName,
-                                                              HashMap<Integer, Integer> squaresRent) {
+    public static void playerIsOnOwnedSquareWithEnoughMoney(HashMap<String, Integer> playerCurrentPositionOnGameBoard,
+                                                            String playerName, int playerIndex,
+                                                            HashMap<Integer, String> squareOwners,
+                                                            HashMap<Integer, String> gameSquares,
+                                                            HashMap<Integer, Integer> playersMoney,
+                                                            HashMap<Integer, Integer> squaresPrice,
+                                                            int numberOfPlayers,
+                                                            HashMap<Integer, String> playersNames,
+                                                            int squareIndex, String squareName,
+                                                            HashMap<Integer, Integer> squaresRent) {
 
         System.out.println("\nYour options now are: ");
 
@@ -667,10 +714,14 @@ public class Main {
         return playerIndex;
     }
 
-    public static void playerIsOnHisOwnSquare(HashMap<String, Integer> playerCurrentPositionOnGameBoard, String playerName,
-                                              int playerIndex, HashMap<Integer, String> squareOwners, HashMap<Integer, String> gameSquares,
-                                              HashMap<Integer, Integer> playersMoney, HashMap<Integer, Integer> squaresPrice,
-                                              int numberOfPlayers, HashMap<Integer, String> playersNames,
+    public static void playerIsOnHisOwnSquare(HashMap<String, Integer> playerCurrentPositionOnGameBoard,
+                                              String playerName, int playerIndex,
+                                              HashMap<Integer, String> squareOwners,
+                                              HashMap<Integer, String> gameSquares,
+                                              HashMap<Integer, Integer> playersMoney,
+                                              HashMap<Integer, Integer> squaresPrice,
+                                              int numberOfPlayers,
+                                              HashMap<Integer, String> playersNames,
                                               int squareIndex, String squareName,
                                               HashMap<Integer, Integer> squaresRent) {
 
@@ -707,18 +758,21 @@ public class Main {
                     squareOwners, gameSquares, playersMoney,  squaresPrice, numberOfPlayers,  playersNames,
                     squareIndex, squareName, squaresRent);
         }
-
     }
 
-    public static void playerIsOnChanceSquare(HashMap<String, Integer> playerCurrentPositionOnGameBoard, String playerName,
-                                              int playerIndex, HashMap<Integer, String> squareOwners, HashMap<Integer, String> gameSquares,
-                                              HashMap<Integer, Integer> playersMoney, HashMap<Integer, Integer> squaresPrice,
-                                              int numberOfPlayers, HashMap<Integer, String> playersNames,
+    public static void playerIsOnChanceSquare(HashMap<String, Integer> playerCurrentPositionOnGameBoard,
+                                              String playerName, int playerIndex,
+                                              HashMap<Integer, String> squareOwners,
+                                              HashMap<Integer, String> gameSquares,
+                                              HashMap<Integer, Integer> playersMoney,
+                                              HashMap<Integer, Integer> squaresPrice,
+                                              int numberOfPlayers,
+                                              HashMap<Integer, String> playersNames,
                                               int squareIndex, String squareName,
                                               HashMap<Integer, Integer> squaresRent,
                                               Stack<String> chanceCards) {
 
-        System.out.println("The following is written on the card:");
+        System.out.println("\nThe following is written on the card:");
         System.out.println("\"" + chanceCards.peek() + "\"");
 
         String cardText = chanceCards.pop();
@@ -726,7 +780,7 @@ public class Main {
 
         int updatePlayerMoney;
 
-        if(cardText.equals("Advance to Go. (Collect $200))")) {
+        if(cardText.equals("Advance to Go. (Collect $200)")) {
             playerCurrentPositionOnGameBoard.replace(playerName, 1);
 
             updatePlayerMoney = playersMoney.get(playerIndex) + 200;
@@ -761,5 +815,155 @@ public class Main {
         System.out.println("--------------------------------------------------------------");
     }
 
+    public static void playerIsOnCommunityChestSquare(HashMap<String, Integer> playerCurrentPositionOnGameBoard,
+                                                      String playerName, int playerIndex,
+                                                      HashMap<Integer, String> squareOwners,
+                                                      HashMap<Integer, String> gameSquares,
+                                                      HashMap<Integer, Integer> playersMoney,
+                                                      HashMap<Integer, Integer> squaresPrice,
+                                                      int numberOfPlayers,
+                                                      HashMap<Integer, String> playersNames,
+                                                      int squareIndex, String squareName,
+                                                      HashMap<Integer, Integer> squaresRent,
+                                                      Stack<String> communityChestCards) {
+
+        System.out.println("\nThe following is written on the card:");
+        System.out.println("\"" + communityChestCards.peek() + "\"");
+
+        String cardText = communityChestCards.pop();
+        communityChestCards.add(0, cardText);
+
+        int updatePlayerMoney;
+
+        if(cardText.equals("From sale of stock you get $50.")) {
+            updatePlayerMoney = playersMoney.get(playerIndex) + 50;
+            playersMoney.replace(playerIndex, updatePlayerMoney);
+        }
+
+        else if(cardText.equals("Bank error in your favour. Collect $200.")) {
+            updatePlayerMoney = playersMoney.get(playerIndex) + 200;
+            playersMoney.replace(playerIndex, updatePlayerMoney);
+        }
+
+        else if(cardText.equals("Pay school fees of $50.")) {
+            updatePlayerMoney = playersMoney.get(playerIndex) - 50;
+            playersMoney.replace(playerIndex, updatePlayerMoney);
+        }
+
+        else if(cardText.equals("You inherit $100.")) {
+            updatePlayerMoney = playersMoney.get(playerIndex) + 100;
+            playersMoney.replace(playerIndex, updatePlayerMoney);
+        }
+
+        else if(cardText.equals("Holiday fund matures. Receive $100")) {
+            updatePlayerMoney = playersMoney.get(playerIndex) + 100;
+            playersMoney.replace(playerIndex, updatePlayerMoney);
+        }
+
+        else if(cardText.equals("Drunkenness fine $15")) {
+            updatePlayerMoney = playersMoney.get(playerIndex) - 15;
+            playersMoney.replace(playerIndex, updatePlayerMoney);
+        }
+
+        System.out.println("--------------------------------------------------------------");
+    }
+
+    public static void playerIsOnIncomeTaxSquare(HashMap<String, Integer> playerCurrentPositionOnGameBoard,
+                                                 String playerName, int playerIndex,
+                                                 HashMap<Integer, String> squareOwners,
+                                                 HashMap<Integer, String> gameSquares,
+                                                 HashMap<Integer, Integer> playersMoney,
+                                                 HashMap<Integer, Integer> squaresPrice,
+                                                 int numberOfPlayers,
+                                                 HashMap<Integer, String> playersNames,
+                                                 int squareIndex, String squareName) {
+
+        System.out.println("\nYou have to pay the bank $ 200!");
+
+        int updatePlayerMoney = playersMoney.get(playerIndex) - 200;
+        playersMoney.replace(playerIndex, updatePlayerMoney);
+
+        System.out.println("--------------------------------------------------------------");
+    }
+
+    public static void playerIsOnJustVisitingSquare(HashMap<String, Integer> playerCurrentPositionOnGameBoard,
+                                                    String playerName, int playerIndex,
+                                                    HashMap<Integer, String> squareOwners,
+                                                    HashMap<Integer, String> gameSquares,
+                                                    HashMap<Integer, Integer> playersMoney,
+                                                    HashMap<Integer, Integer> squaresPrice,
+                                                    int numberOfPlayers,
+                                                    HashMap<Integer, String> playersNames,
+                                                    int squareIndex, String squareName) {
+
+        System.out.println("\nYou are just visiting the prison! (You don't have to do anything.)");
+
+        System.out.println("--------------------------------------------------------------");
+    }
+
+    public static void playerIsOnFreeParkingSquare(HashMap<String, Integer> playerCurrentPositionOnGameBoard,
+                                                   String playerName, int playerIndex,
+                                                   HashMap<Integer, String> squareOwners,
+                                                   HashMap<Integer, String> gameSquares,
+                                                   HashMap<Integer, Integer> playersMoney,
+                                                   HashMap<Integer, Integer> squaresPrice,
+                                                   int numberOfPlayers,
+                                                   HashMap<Integer, String> playersNames,
+                                                   int squareIndex, String squareName) {
+
+        System.out.println("\nYou are in the free car park! (You don't have to do anything.)");
+
+        System.out.println("--------------------------------------------------------------");
+    }
+
+    public static void playerIsOnSuperTaxSquare(HashMap<String, Integer> playerCurrentPositionOnGameBoard,
+                                                String playerName, int playerIndex,
+                                                HashMap<Integer, String> squareOwners,
+                                                HashMap<Integer, String> gameSquares,
+                                                HashMap<Integer, Integer> playersMoney,
+                                                HashMap<Integer, Integer> squaresPrice,
+                                                int numberOfPlayers,
+                                                HashMap<Integer, String> playersNames,
+                                                int squareIndex, String squareName) {
+
+        System.out.println("\nYou have to pay the bank $ 100!");
+
+        int updatePlayerMoney = playersMoney.get(playerIndex) - 100;
+        playersMoney.replace(playerIndex, updatePlayerMoney);
+
+        System.out.println("--------------------------------------------------------------");
+    }
+
+    public static void playerIsOnUtilitySquare(HashMap<String, Integer> playerCurrentPositionOnGameBoard,
+                                               String playerName, int playerIndex,
+                                               HashMap<Integer, String> squareOwners,
+                                               HashMap<Integer, String> gameSquares,
+                                               HashMap<Integer, Integer> playersMoney,
+                                               HashMap<Integer, Integer> squaresPrice,
+                                               int numberOfPlayers,
+                                               HashMap<Integer, String> playersNames,
+                                               int squareIndex, String squareName,
+                                               HashMap<Integer, Integer> squaresRent) {
+
+        String squareOwnerName = squareOwners.get(squareIndex);
+
+        System.out.println("\nYou have to roll the dice again and pay " + squareOwnerName +  " the result of the dice * 5.");
+
+        int resultFromDice = rollDice();
+
+        System.out.println("\nYou threw " + resultFromDice + ". So, you have to pay " + squareOwnerName + " $ " +
+                squaresRent.get(squareIndex) * resultFromDice + ".");
+
+        int updatedPlayerMoney = playersMoney.get(playerIndex) - squaresRent.get(squareIndex) * resultFromDice;
+
+        playersMoney.replace(playerIndex, updatedPlayerMoney);
+
+        int squareOwnerIndex = getPlayerIndexFromName(playersNames, squareOwnerName);
+        int updatedSquareOwnerMoney = playersMoney.get(squareOwnerIndex) + squaresRent.get(squareIndex) * resultFromDice;
+
+        playersMoney.replace(squareOwnerIndex, updatedSquareOwnerMoney);
+
+        System.out.println("--------------------------------------------------------------");
+    }
 
 }
