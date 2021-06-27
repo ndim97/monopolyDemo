@@ -87,7 +87,7 @@ public class Main {
 
         Stack<String> chanceCards = new Stack<>();
 
-        chanceCards.push("Advance to Go. (Collect $200))");
+        chanceCards.push("Advance to Go. (Collect $200)");
         chanceCards.push("Pay the housing tax -$150");
         chanceCards.push("Bank pays you dividend of $50");
         chanceCards.push("Go to Jail! (Go directly to Jail, do not pass Go, do not collect $200)");
@@ -293,22 +293,30 @@ public class Main {
                                    Stack<String> communityChestCards) {
 
         int counter = 0;
+        boolean mistake = false;
 
         for (int i = 1; i <= numberOfPlayers; i++) {
 
             String playerName = playersNames.get(i);
 
-            if(playersCurrentPositionOnGameBoard.get(playerName) == 31) {
+            if(playersCurrentPositionOnGameBoard.get(playerName) == 31 && !mistake) {
                 counter++;
 
                 if(counter <= 3){
                     System.out.println("\n" + playerName + " is still in jail!");
                     System.out.println("----------------------------------------");
+
+                    if(i == numberOfPlayers) {
+                        i = 0;
+                    }
+
                     continue;
                 }
 
                 else counter = 0;
             }
+
+            mistake = false;
 
             System.out.print("\n" + playersNames.get(i) + ", it's your turn! Press \"enter\" to roll the dice. ");
 
@@ -323,12 +331,11 @@ public class Main {
                 playerOptions(playersCurrentPositionOnGameBoard, playersNames.get(i), i, squareOwners,
                         gameSquares, playersMoney, squaresPrice, numberOfPlayers, playersNames, squaresRent,
                         chanceCards, communityChestCards);
-
-
             }
 
             else {
                 System.out.println("\nYou pressed wrong button/s! Let's try again...");
+                mistake = true;
                 i--;
                 continue;
             }
@@ -435,10 +442,10 @@ public class Main {
                     playersMoney, squaresPrice, numberOfPlayers, playersNames, squareIndex, squareName, squaresRent);
         }
 
-        else if (squareOwners.get(squareIndex) != null &&
+        else if (squareIndex != 13 && squareIndex != 29 &&
+                squareOwners.get(squareIndex) != null &&
                 !squareOwners.get(squareIndex).equals(playerName) &&
                 squaresPrice.get(squareIndex) != null &&
-                squareIndex != 13 && squareIndex != 29 &&
                 (playersMoney.get(playerIndex) > squaresRent.get(squareIndex))) {
 
             playerIsOnOwnedSquareWithEnoughMoney(playerCurrentPositionOnGameBoard, playerName, playerIndex, squareOwners, gameSquares,
@@ -495,9 +502,9 @@ public class Main {
                     playersMoney, squaresPrice, numberOfPlayers, playersNames, squareIndex, squareName);
         }
 
-        else if(squareOwners.get(squareIndex) != null &&
-                !squareOwners.get(squareIndex).equals(playerName) &&
-                squareIndex == 13 || squareIndex == 29) {
+        else if((squareIndex == 13 || squareIndex == 29) &&
+                squareOwners.get(squareIndex) != null &&
+                !squareOwners.get(squareIndex).equals(playerName)) {
 
             playerIsOnUtilitySquare(playerCurrentPositionOnGameBoard, playerName, playerIndex, squareOwners, gameSquares,
                     playersMoney, squaresPrice, numberOfPlayers, playersNames, squareIndex, squareName, squaresRent);
