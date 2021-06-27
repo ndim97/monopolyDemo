@@ -1,5 +1,6 @@
 package com.company;
 
+import java.sql.SQLOutput;
 import java.util.*;
 
 public class Main {
@@ -291,7 +292,24 @@ public class Main {
                                    Stack<String> chanceCards,
                                    Stack<String> communityChestCards) {
 
+        int counter = 0;
+
         for (int i = 1; i <= numberOfPlayers; i++) {
+
+            String playerName = playersNames.get(i);
+
+            if(playersCurrentPositionOnGameBoard.get(playerName) == 31) {
+                counter++;
+
+                if(counter <= 3){
+                    System.out.println("\n" + playerName + " is still in jail!");
+                    System.out.println("----------------------------------------");
+                    continue;
+                }
+
+                else counter = 0;
+            }
+
             System.out.print("\n" + playersNames.get(i) + ", it's your turn! Press \"enter\" to roll the dice. ");
 
             if (isPlayerPressEnter()) {
@@ -467,7 +485,8 @@ public class Main {
 
         else if(squareIndex == 31) {
 
-            //write code for jail here
+            goToJail(playerCurrentPositionOnGameBoard, playerName, playerIndex, squareOwners, gameSquares,
+                    playersMoney, squaresPrice, numberOfPlayers, playersNames, squareIndex, squareName, squaresRent);
         }
 
         else if(squareIndex == 39) {
@@ -798,8 +817,8 @@ public class Main {
         }
 
         else if(cardText.equals("Go to Jail! (Go directly to Jail, do not pass Go, do not collect $200)")) {
-            System.out.println("Go to jail!");
-            //add code here
+            goToJail(playerCurrentPositionOnGameBoard, playerName, playerIndex, squareOwners, gameSquares,
+                    playersMoney, squaresPrice, numberOfPlayers, playersNames, squareIndex, squareName, squaresRent);
         }
 
         else if(cardText.equals("Go Back 3 Spaces")) {
@@ -963,6 +982,22 @@ public class Main {
 
         playersMoney.replace(squareOwnerIndex, updatedSquareOwnerMoney);
 
+        System.out.println("--------------------------------------------------------------");
+    }
+
+    public static void goToJail(HashMap<String, Integer> playerCurrentPositionOnGameBoard,
+                                String playerName, int playerIndex,
+                                HashMap<Integer, String> squareOwners,
+                                HashMap<Integer, String> gameSquares,
+                                HashMap<Integer, Integer> playersMoney,
+                                HashMap<Integer, Integer> squaresPrice,
+                                int numberOfPlayers,
+                                HashMap<Integer, String> playersNames,
+                                int squareIndex, String squareName,
+                                HashMap<Integer, Integer> squaresRent) {
+
+        System.out.println("\nYou go to jail and will miss three moves!");
+        playerCurrentPositionOnGameBoard.replace(playerName, 31);
         System.out.println("--------------------------------------------------------------");
     }
 
