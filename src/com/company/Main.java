@@ -20,8 +20,8 @@ public class Main {
         HashMap<String, Integer> playersCurrentPositionOnGameBoard = createHashMapForInitialPlayerPositionsOnGameBoard(playersNames);
         HashMap<Integer, Integer> playersMoney = prepareInitialPlayersMoney(numberOfPlayers);
 
-        int housesInBank = 34;
-        int hotelsInBank = 13;
+//        int housesInBank = 34;
+//        int hotelsInBank = 13;
 
         HashMap<Integer, String> gameSquares = prepareGameSquares();
         HashMap<Integer, Integer> squaresPrice = prepareSquaresPrice();
@@ -36,7 +36,7 @@ public class Main {
         showMessageForStartTheGame(gameSquares);
 
         moveTracker(numberOfPlayers, playersNames, gameSquares, playersCurrentPositionOnGameBoard,
-                playersMoney, squaresOwners, squaresPrice, squaresRent);
+                playersMoney, squaresOwners, squaresPrice, squaresRent, chanceCards);
 
 
     }
@@ -93,24 +93,24 @@ public class Main {
 
         Stack<String> chanceCards = new Stack<>();
 
-        chanceCards.push("Advance to \"Trafalgar Square\". Collect $200");
-        chanceCards.push("Advance to \"Marylebone Station\". If you pass Go, collect $200");
-        chanceCards.push("Advance to the nearest Railroad. If unowned, you may buy it from the Bank. " +
-                "If owned, pay wonder twice the rental to which they are otherwise entitled");
-        chanceCards.push("Get Out of Jail Free! (You can keep the card or sell it.)");
-        chanceCards.push("Advance to \"Mayfair\".");
+//        chanceCards.push("Advance to \"Trafalgar Square\". Collect $200");
+//        chanceCards.push("Advance to \"Marylebone Station\". If you pass Go, collect $200");
+//        chanceCards.push("Advance to the nearest Railroad. If unowned, you may buy it from the Bank. " +
+//                "If owned, pay wonder twice the rental to which they are otherwise entitled");
+//        chanceCards.push("Get Out of Jail Free! (You can keep the card or sell it.)");
+//        chanceCards.push("Advance to \"Mayfair\".");
         chanceCards.push("Advance to Go. (Collect $200))");
         chanceCards.push("Pay the housing tax -$150");
         chanceCards.push("Bank pays you dividend of $50");
         chanceCards.push("Go to Jail! (Go directly to Jail, do not pass Go, do not collect $200)");
-        chanceCards.push("You have won a crossword puzzle contest. Collect 100 $");
-        chanceCards.push("Make general repairs on all your property. For each house pay $25. " +
-                "For each hotel pay $100");
-        chanceCards.push("Your building loan matures. Collect $150");
+//        chanceCards.push("You have won a crossword puzzle contest. Collect 100 $");
+//        chanceCards.push("Make general repairs on all your property. For each house pay $25. " +
+//                "For each hotel pay $100");
+//        chanceCards.push("Your building loan matures. Collect $150");
         chanceCards.push("Go Back 3 Spaces");
-        chanceCards.push(" Advance token to nearest Utility. If unowned, you may buy it from the Bank. " +
-                "If owned, throw dice and pay owner a total ten times amount thrown.");
-        chanceCards.push("Advance to \"Pall Mall\". If you pass Go, collect $200");
+//        chanceCards.push(" Advance token to nearest Utility. If unowned, you may buy it from the Bank. " +
+//                "If owned, throw dice and pay owner a total ten times amount thrown.");
+//        chanceCards.push("Advance to \"Pall Mall\". If you pass Go, collect $200");
         chanceCards.push("Speeding fine $15");
 
         //Shuffle the cards
@@ -124,20 +124,20 @@ public class Main {
         Stack<String> communityChestCards = new Stack<>();
 
         communityChestCards.push("From sale of stock you get $50.");
-        communityChestCards.push("Income tax refund. Collect $20.");
-        communityChestCards.push("You have won second prize in a beauty contest. Collect $10.");
+//        communityChestCards.push("Income tax refund. Collect $20.");
+//        communityChestCards.push("You have won second prize in a beauty contest. Collect $10.");
         communityChestCards.push("Bank error in your favour. Collect $200.");
-        communityChestCards.push("It is your happy day! Collect $10 from every player.");
+//        communityChestCards.push("It is your happy day! Collect $10 from every player.");
         communityChestCards.push("Pay school fees of $50.");
-        communityChestCards.push("Receive $25 consultancy fee.");
+//        communityChestCards.push("Receive $25 consultancy fee.");
         communityChestCards.push("You inherit $100.");
-        communityChestCards.push("Get Out of Jail Free! (You can keep the card or sell it.)");
+//        communityChestCards.push("Get Out of Jail Free! (You can keep the card or sell it.)");
         communityChestCards.push("Holiday fund matures. Receive $100");
-        communityChestCards.push("Advance to Go. (Collect £200)");
-        communityChestCards.push("Pay a fine of $10 or get a CHANCE card.");
-        communityChestCards.push("Go to Jail! (Go directly to jail, do not pass Go, do not collect £200.)");
-        communityChestCards.push("Life insurance matures. Collect $100");
-        communityChestCards.push("Pay housing fees of $100)");
+//        communityChestCards.push("Advance to Go. (Collect £200)");
+//        communityChestCards.push("Pay a fine of $10 or get a CHANCE card.");
+//        communityChestCards.push("Go to Jail! (Go directly to jail, do not pass Go, do not collect £200.)");
+//        communityChestCards.push("Life insurance matures. Collect $100");
+//        communityChestCards.push("Pay housing fees of $100)");
         communityChestCards.push("Drunkenness fine $15");
 
         //Shuffle the cards
@@ -311,7 +311,8 @@ public class Main {
                                    HashMap<Integer, Integer> playersMoney,
                                    HashMap<Integer, String> squareOwners,
                                    HashMap<Integer, Integer> squaresPrice,
-                                   HashMap<Integer, Integer> squaresRent) {
+                                   HashMap<Integer, Integer> squaresRent,
+                                   Stack<String> chanceCards) {
         for (int i = 1; i <= numberOfPlayers; i++) {
             System.out.print("\n" + playersNames.get(i) + ", it's your turn! Press \"enter\" to roll the dice. ");
 
@@ -324,7 +325,7 @@ public class Main {
                 System.out.println("You have $ " + playersMoney.get(i));
 
                 playerOptions(playersCurrentPositionOnGameBoard, playersNames.get(i), i, squareOwners,
-                        gameSquares, playersMoney, squaresPrice, numberOfPlayers, playersNames, squaresRent);
+                        gameSquares, playersMoney, squaresPrice, numberOfPlayers, playersNames, squaresRent, chanceCards);
 
 
             } else {
@@ -409,8 +410,8 @@ public class Main {
                                      int playerIndex, HashMap<Integer, String> squareOwners, HashMap<Integer, String> gameSquares,
                                      HashMap<Integer, Integer> playersMoney, HashMap<Integer, Integer> squaresPrice,
                                      int numberOfPlayers, HashMap<Integer, String> playersNames,
-                                     HashMap<Integer, Integer> squaresRent) {
-        System.out.println("\nYour options now are: ");
+                                     HashMap<Integer, Integer> squaresRent,
+                                     Stack<String> chanceCards) {
 
         //playerCurrentPositionOnGameBoard.get(playerName) returns values from 1 to 40
 
@@ -426,11 +427,26 @@ public class Main {
         }
 
         else if (squareOwners.get(squareIndex) != null &&
+                !squareOwners.get(squareIndex).equals(playerName) &&
                 squaresPrice.get(squareIndex) != null &&
-                (playersMoney.get(playerIndex) > squaresPrice.get(squareIndex))) {
+                (playersMoney.get(playerIndex) > squaresRent.get(squareIndex))) {
 
             playerIsOnOwnedSquareWithEnoughMoney(playerCurrentPositionOnGameBoard, playerName, playerIndex, squareOwners, gameSquares,
                     playersMoney, squaresPrice, numberOfPlayers, playersNames, squareIndex, squareName, squaresRent);
+        }
+
+        else if (squareOwners.get(squareIndex) != null &&
+                squareOwners.get(squareIndex).equals(playerName) &&
+                squaresPrice.get(squareIndex) != null) {
+
+            playerIsOnHisOwnSquare(playerCurrentPositionOnGameBoard, playerName, playerIndex, squareOwners, gameSquares,
+                    playersMoney, squaresPrice, numberOfPlayers, playersNames, squareIndex, squareName, squaresRent);
+        }
+
+        else if(squareIndex == 8 || squareIndex == 23 || squareIndex == 37) {
+
+            playerIsOnChanceSquare(playerCurrentPositionOnGameBoard, playerName, playerIndex, squareOwners, gameSquares,
+                    playersMoney, squaresPrice, numberOfPlayers, playersNames, squareIndex, squareName, squaresRent, chanceCards);
         }
 
     }
@@ -441,6 +457,7 @@ public class Main {
                                                               int numberOfPlayers, HashMap<Integer, String> playersNames,
                                                               int squareIndex, String squareName,
                                                               HashMap<Integer, Integer> squaresRent) {
+        System.out.println("\nYour options now are: ");
 
         System.out.println("1. Buy \"" + squareName + "\". It costs $ " +
                 squaresPrice.get(squareIndex) + ".");
@@ -457,8 +474,10 @@ public class Main {
 
             if (playerChoice < 1 || playerChoice > 2) {
                 System.out.println("\nWrong input! You must select one of the options listed! Try again!");
-                playerOptions(playerCurrentPositionOnGameBoard, playerName, playerIndex, squareOwners, gameSquares,
-                        playersMoney, squaresPrice, numberOfPlayers, playersNames, squaresRent);
+
+                playerIsOnUnownedSquareWithEnoughMoney( playerCurrentPositionOnGameBoard, playerName, playerIndex,
+                        squareOwners, gameSquares, playersMoney,  squaresPrice, numberOfPlayers,  playersNames,
+                        squareIndex, squareName, squaresRent);
             }
 
             switch (playerChoice) {
@@ -484,8 +503,10 @@ public class Main {
 
         catch (InputMismatchException e) {
             System.out.println("\nWrong input! You must select one of the options listed! Try again!");
-            playerOptions(playerCurrentPositionOnGameBoard, playerName, playerIndex, squareOwners, gameSquares,
-                    playersMoney, squaresPrice, numberOfPlayers, playersNames, squaresRent);
+
+            playerIsOnUnownedSquareWithEnoughMoney( playerCurrentPositionOnGameBoard, playerName, playerIndex,
+                     squareOwners, gameSquares, playersMoney,  squaresPrice, numberOfPlayers,  playersNames,
+                     squareIndex, squareName, squaresRent);
         }
     }
 
@@ -586,7 +607,9 @@ public class Main {
                                                               int squareIndex, String squareName,
                                                               HashMap<Integer, Integer> squaresRent) {
 
-        System.out.println("1. Pay the rent to " + squareOwners.get(squareIndex) + ". The rent is $ " +
+        System.out.println("\nYour options now are: ");
+
+        System.out.println("\n1. Pay the rent to " + squareOwners.get(squareIndex) + ". The rent is $ " +
                 squaresRent.get(squareIndex) + ".");
 
         System.out.print("Now, choose option: ");
@@ -598,14 +621,23 @@ public class Main {
 
             if (playerChoice != 1) {
                 System.out.println("\nWrong input! You must select one of the options listed! Try again!");
-                playerOptions(playerCurrentPositionOnGameBoard, playerName, playerIndex, squareOwners, gameSquares,
-                        playersMoney, squaresPrice, numberOfPlayers, playersNames, squaresRent);
+
+                playerIsOnOwnedSquareWithEnoughMoney( playerCurrentPositionOnGameBoard, playerName, playerIndex,
+                        squareOwners, gameSquares, playersMoney,  squaresPrice, numberOfPlayers,  playersNames,
+                        squareIndex, squareName, squaresRent);
             }
 
             switch (playerChoice) {
                 case 1:
                     int updatedPlayerMoney = playersMoney.get(playerIndex) - squaresRent.get(squareIndex);
+
                     playersMoney.replace(playerIndex, updatedPlayerMoney);
+
+                    String squareOwnerName = squareOwners.get(squareIndex);
+                    int squareOwnerIndex = getPlayerIndexFromName(playersNames, squareOwnerName);
+                    int updatedSquareOwnerMoney = playersMoney.get(squareOwnerIndex) + squaresRent.get(squareIndex);
+
+                    playersMoney.replace(squareOwnerIndex, updatedSquareOwnerMoney);
 
                     System.out.println("\nYou have successfully paid the rent to " + squareOwners.get(squareIndex) + ".");
                     System.out.println("----------------------------------------------------------------");
@@ -615,9 +647,119 @@ public class Main {
 
         catch (InputMismatchException e) {
             System.out.println("\nWrong input! You must select one of the options listed! Try again!");
-            playerOptions(playerCurrentPositionOnGameBoard, playerName, playerIndex, squareOwners, gameSquares,
-                    playersMoney, squaresPrice, numberOfPlayers, playersNames, squaresRent);
+
+            playerIsOnOwnedSquareWithEnoughMoney( playerCurrentPositionOnGameBoard, playerName, playerIndex,
+                    squareOwners, gameSquares, playersMoney,  squaresPrice, numberOfPlayers,  playersNames,
+                    squareIndex, squareName, squaresRent);
         }
     }
+
+    public static int getPlayerIndexFromName(HashMap<Integer, String> playersNames, String playerName) {
+
+        int playerIndex = 0;
+
+        for(int i = 1; i <= playersNames.size(); i++) {
+            if(playersNames.get(i).equals(playerName)){
+                playerIndex = i;
+            }
+        }
+
+        return playerIndex;
+    }
+
+    public static void playerIsOnHisOwnSquare(HashMap<String, Integer> playerCurrentPositionOnGameBoard, String playerName,
+                                              int playerIndex, HashMap<Integer, String> squareOwners, HashMap<Integer, String> gameSquares,
+                                              HashMap<Integer, Integer> playersMoney, HashMap<Integer, Integer> squaresPrice,
+                                              int numberOfPlayers, HashMap<Integer, String> playersNames,
+                                              int squareIndex, String squareName,
+                                              HashMap<Integer, Integer> squaresRent) {
+
+        System.out.println("\nYour options now are: ");
+
+        System.out.println("\n1. Don't do anything. (\"" + gameSquares.get(squareIndex) + "\" is your property.)");
+
+        System.out.print("Now, choose option: ");
+
+        Scanner sc = new Scanner(System.in);
+
+        try {
+            int playerChoice = sc.nextInt();
+
+            if (playerChoice != 1) {
+                System.out.println("\nWrong input! You must select one of the options listed! Try again!");
+
+                playerIsOnHisOwnSquare( playerCurrentPositionOnGameBoard, playerName, playerIndex,
+                        squareOwners, gameSquares, playersMoney,  squaresPrice, numberOfPlayers,  playersNames,
+                        squareIndex, squareName, squaresRent);
+            }
+
+            switch (playerChoice) {
+                case 1:
+                    System.out.println("----------------------------------------------------------------");
+                    break;
+            }
+        }
+
+        catch (InputMismatchException e) {
+            System.out.println("\nWrong input! You must select one of the options listed! Try again!");
+
+            playerIsOnHisOwnSquare( playerCurrentPositionOnGameBoard, playerName, playerIndex,
+                    squareOwners, gameSquares, playersMoney,  squaresPrice, numberOfPlayers,  playersNames,
+                    squareIndex, squareName, squaresRent);
+        }
+
+    }
+
+    public static void playerIsOnChanceSquare(HashMap<String, Integer> playerCurrentPositionOnGameBoard, String playerName,
+                                              int playerIndex, HashMap<Integer, String> squareOwners, HashMap<Integer, String> gameSquares,
+                                              HashMap<Integer, Integer> playersMoney, HashMap<Integer, Integer> squaresPrice,
+                                              int numberOfPlayers, HashMap<Integer, String> playersNames,
+                                              int squareIndex, String squareName,
+                                              HashMap<Integer, Integer> squaresRent,
+                                              Stack<String> chanceCards) {
+
+        System.out.println("The following is written on the card:");
+        System.out.println("\"" + chanceCards.peek() + "\"");
+
+        String cardText = chanceCards.pop();
+        chanceCards.add(0, cardText);
+
+        int updatePlayerMoney;
+
+        if(cardText.equals("Advance to Go. (Collect $200))")) {
+            playerCurrentPositionOnGameBoard.replace(playerName, 1);
+
+            updatePlayerMoney = playersMoney.get(playerIndex) + 200;
+            playersMoney.replace(playerIndex, updatePlayerMoney);
+        }
+
+        else if(cardText.equals("Pay the housing tax -$150")) {
+            updatePlayerMoney = playersMoney.get(playerIndex) - 150;
+            playersMoney.replace(playerIndex, updatePlayerMoney);
+        }
+
+        else if(cardText.equals("Bank pays you dividend of $50")) {
+            updatePlayerMoney = playersMoney.get(playerIndex) + 50;
+            playersMoney.replace(playerIndex, updatePlayerMoney);
+        }
+
+        else if(cardText.equals("Go to Jail! (Go directly to Jail, do not pass Go, do not collect $200)")) {
+            System.out.println("Go to jail!");
+            //add code here
+        }
+
+        else if(cardText.equals("Go Back 3 Spaces")) {
+            int newPosition = squareIndex - 3;
+            playerCurrentPositionOnGameBoard.replace(playerName, 1);
+        }
+
+        else if(cardText.equals("Speeding fine $15")) {
+            updatePlayerMoney = playersMoney.get(playerIndex) - 15;
+            playersMoney.replace(playerIndex, updatePlayerMoney);
+        }
+
+        System.out.println("--------------------------------------------------------------");
+    }
+
 
 }
