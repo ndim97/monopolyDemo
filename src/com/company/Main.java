@@ -169,45 +169,45 @@ public class Main {
         HashMap<Integer, Integer> squaresRent = new HashMap<>();
 
         squaresRent.put(1, null);
-        squaresRent.put(2, 12);
+        squaresRent.put(2, 50);
         squaresRent.put(3, null);
-        squaresRent.put(4, 14);
+        squaresRent.put(4, 60);
         squaresRent.put(5, null);
-        squaresRent.put(6, 50);
-        squaresRent.put(7, 16);
+        squaresRent.put(6, 100);
+        squaresRent.put(7, 70);
         squaresRent.put(8, null);
-        squaresRent.put(9, 16);
-        squaresRent.put(10, 18);
+        squaresRent.put(9, 70);
+        squaresRent.put(10, 80);
         squaresRent.put(11, null);
-        squaresRent.put(12, 20);
+        squaresRent.put(12, 90);
         squaresRent.put(13, 10);
-        squaresRent.put(14, 20);
-        squaresRent.put(15, 22);
-        squaresRent.put(16, 50);
-        squaresRent.put(17, 24);
+        squaresRent.put(14, 90);
+        squaresRent.put(15, 100);
+        squaresRent.put(16, 100);
+        squaresRent.put(17, 110);
         squaresRent.put(18, null);
-        squaresRent.put(19, 24);
-        squaresRent.put(20, 26);
+        squaresRent.put(19, 110);
+        squaresRent.put(20, 120);
         squaresRent.put(21, null);
-        squaresRent.put(22, 28);
+        squaresRent.put(22, 130);
         squaresRent.put(23, null);
-        squaresRent.put(24, 28);
-        squaresRent.put(25, 30);
-        squaresRent.put(26, 50);
-        squaresRent.put(27, 32);
-        squaresRent.put(28, 32);
+        squaresRent.put(24, 130);
+        squaresRent.put(25, 140);
+        squaresRent.put(26, 100);
+        squaresRent.put(27, 150);
+        squaresRent.put(28, 150);
         squaresRent.put(29, 10);
-        squaresRent.put(30, 32);
+        squaresRent.put(30, 160);
         squaresRent.put(31, null);
-        squaresRent.put(32, 36);
-        squaresRent.put(33, 36);
+        squaresRent.put(32, 170);
+        squaresRent.put(33, 170);
         squaresRent.put(34, null);
-        squaresRent.put(35, 38);
-        squaresRent.put(36, 50);
+        squaresRent.put(35, 180);
+        squaresRent.put(36, 100);
         squaresRent.put(37, null);
-        squaresRent.put(38, 45);
+        squaresRent.put(38, 190);
         squaresRent.put(39, null);
-        squaresRent.put(40, 100);
+        squaresRent.put(40, 200);
 
         return squaresRent;
     }
@@ -647,106 +647,126 @@ public class Main {
 
                 if(lostPlayers.contains(i)) {
                     playersAnswers.put(i, 0);
-                    continue;
                 }
 
                 else if(playersCurrentPositionOnGameBoard.get(playersNames.get(i)) == 31) {
                     System.out.println(playersNames.get(i) + " is still in jail! So, he/she skips turn! \n");
                     playersAnswers.put(i, 0);
-                    continue;
                 }
 
-                if(playersMoney.get(i) < squaresPrice.get(squareIndex)) {
+                else if(playersMoney.get(i) < squaresPrice.get(squareIndex)) {
                     System.out.println(playersNames.get(i) + " doesn't have enough money for this auction! So, he/she skips turn! \n");
                     playersAnswers.put(i, 0);
                     count++;
 
                     if(count == numberOfPlayers) {
-                        System.out.println("No one has enough money to buy " + squareName + ". For now it remains for bank.");
+                        System.out.println("No one has enough money to buy \"" + squareName + "\". For now it remains for bank.");
                         System.out.println("---------------------------------------------------------------------------------------");
                         break;
                     }
-
-                    continue;
                 }
 
-                System.out.println(playersNames.get(i) + ", choose option:");
-                System.out.println("1. Enter an amount in $.");
-                System.out.println("2. Skip.");
-                System.out.print("Choose option: ");
+                else {
+                    System.out.println(playersNames.get(i) + ", choose option:");
+                    System.out.println("1. Enter an amount in $.");
+                    System.out.println("2. Skip.");
+                    System.out.print("Choose option: ");
 
-                playerChoice = sc.nextInt();
+                    playerChoice = sc.nextInt();
 
 
-                if (playerChoice < 1 || playerChoice > 2) {
-                    System.out.println("\nWrong input! You must select one of the options listed! Try again!\n");
-                    i--;
-                    continue;
-                }
-
-                switch (playerChoice) {
-                    case 1:
-                        System.out.print("Enter an amount in $: ");
-                        amount = sc.nextInt();
-
-                        if (amount < currentBiggestOffer) {
-                            System.out.println("\nYou must offer a larger amount! \n");
-                            playersAnswers.put(i, 0);
-                        }
-
-                        else if(amount > playersMoney.get(i)) {
-                            System.out.println("\n" + playersNames.get(i) + ", what are you doing? You don't have this money! \n");
-                            playersAnswers.put(i, 0);
-                        }
-
-                        else {
-                            currentBiggestOffer = amount;
-                            playersAnswers.put(i, amount);
-                            System.out.println();
-                        }
-                        break;
-
-                    case 2:
-                        System.out.println("\n" + playersNames.get(i) + " skipped! \n");
-                        playersAnswers.put(i, 0);
-                        break;
-                }
-
-                if (i == numberOfPlayers) {
-                    int counter = 0;
-
-                    for (int j = 1; j <= numberOfPlayers; j++) {
-                        if (playersAnswers.get(j) != 0) {
-                            counter++;
-                        }
+                    if (playerChoice < 1 || playerChoice > 2) {
+                        System.out.println("\nWrong input! You must select one of the options listed! Try again!\n");
+                        i--;
+                        continue;
                     }
 
-                    if (counter > 1) {
-                        i = 0;
-                    } else if (counter == 1) {
-                        for (int k = 1; k <= playersAnswers.size(); k++) {
-                            if (playersAnswers.get(k) != 0) {
-                                String nameOfPlayer = playersNames.get(k);
-                                squareOwners.replace(squareIndex, nameOfPlayer);
+                    switch (playerChoice) {
+                        case 1:
+                            System.out.print("Enter an amount in $: ");
+                            amount = sc.nextInt();
 
-                                int updatePlayerMoney = playersMoney.get(k) - playersAnswers.get(k);
-                                playersMoney.replace(k, updatePlayerMoney);
-                                System.out.println(nameOfPlayer + " won the auction! He/She successfully bought \"" + squareName + "\".");
-                                System.out.println("--------------------------------------------------------------------------");
+                            if (amount < currentBiggestOffer) {
+                                System.out.println("\nYou must offer a larger amount! \n");
+                                playersAnswers.put(i, 0);
+                            } else if (amount > playersMoney.get(i)) {
+                                System.out.println("\n" + playersNames.get(i) + ", what are you doing? You don't have this money! \n");
+                                playersAnswers.put(i, 0);
+                            } else {
+                                currentBiggestOffer = amount;
+                                playersAnswers.put(i, amount);
+                                System.out.println();
+                            }
+                            break;
+
+                        case 2:
+                            System.out.println("\n" + playersNames.get(i) + " skipped! \n");
+                            playersAnswers.put(i, 0);
+                            break;
+                    }
+                }
+
+                    if (i == numberOfPlayers) {
+                        int counter = 0;
+
+                        for (int j = 1; j <= numberOfPlayers; j++) {
+                            if (playersAnswers.get(j) != 0) {
+                                counter++;
                             }
                         }
-                    } else if (counter == 0) {
-                        System.out.println("No one wanted to buy \"" + squareName + "\". For now it remains for bank.");
-                        System.out.println("---------------------------------------------------------------------------");
+
+                        if (counter > 1) {
+                            i = 0;
+                        }
+
+                        else if (counter == 1) {
+                            for (int k = 1; k <= playersAnswers.size(); k++) {
+                                if (playersAnswers.get(k) != 0) {
+                                    String nameOfPlayer = playersNames.get(k);
+                                    squareOwners.replace(squareIndex, nameOfPlayer);
+
+                                    int updatePlayerMoney = playersMoney.get(k) - playersAnswers.get(k);
+                                    playersMoney.replace(k, updatePlayerMoney);
+                                    System.out.println(nameOfPlayer + " won the auction! He/She successfully bought \"" + squareName + "\".");
+                                    System.out.println("--------------------------------------------------------------------------");
+                                    break;
+                                }
+                            }
+                        }
+
+                        else if (counter == 0) {
+                            System.out.println("No one wanted to buy \"" + squareName + "\". For now it remains for bank.");
+                            System.out.println("---------------------------------------------------------------------------");
+                            break;
+                        }
+
+                        else if(!canSomeoneBuySquare(numberOfPlayers, playersAnswers)) {
+                            System.out.println("End of auction.");
+                            System.out.println("------------------------");
+                            break;
+                        }
                     }
-                }
             }
-        } catch (InputMismatchException e) {
+        }
+
+        catch (InputMismatchException e) {
             System.out.println("\nFatal wrong input! Bidding starts again!\n");
 
             auction(playersCurrentPositionOnGameBoard, playerName, squareOwners, gameSquares,
                     playersMoney, squaresPrice, numberOfPlayers, playersNames, lostPlayers);
         }
+
+    }
+
+    public static boolean canSomeoneBuySquare(int numberOfPlayers, HashMap<Integer, Integer> playersAnswers) {
+
+        for(int i = 1; i <= numberOfPlayers; i++) {
+            if(playersAnswers.get(i) != 0) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public static void playerIsOnOwnedSquareWithEnoughMoney(HashMap<String, Integer> playerCurrentPositionOnGameBoard,
@@ -1096,7 +1116,7 @@ public class Main {
 
         String squareOwnerName = squareOwners.get(squareIndex);
 
-        System.out.println("\nYou have to roll the dice again and pay " + squareOwnerName +  " the result of the dice * 5.");
+        System.out.println("\nYou have to roll the dice again and pay " + squareOwnerName +  " the result of the dice * 10.");
 
         int resultFromDice = rollDice();
 
