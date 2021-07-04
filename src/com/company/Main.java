@@ -1,6 +1,5 @@
 package com.company;
 
-import java.sql.SQLOutput;
 import java.util.*;
 
 public class Main {
@@ -413,11 +412,9 @@ public class Main {
         return playersMoney;
     }
 
-    public static int updatePlayerMoneyAfterPassGo(HashMap<Integer, Integer> playersMoney, int playerIndex) {
+    public static void updatePlayerMoneyAfterPassGo(HashMap<Integer, Integer> playersMoney, int playerIndex) {
         int updatePlayerMoney = playersMoney.get(playerIndex) + 200;
         playersMoney.replace(playerIndex, updatePlayerMoney);
-
-        return playersMoney.get(playerIndex);
     }
 
     public static HashMap<Integer, String> createHashMapForInitialSquareOwners(HashMap<Integer, String> gameSquares) {
@@ -454,7 +451,7 @@ public class Main {
                 (playersMoney.get(playerIndex) > squaresPrice.get(squareIndex))) {
 
             playerIsOnUnownedSquareWithEnoughMoney(playerCurrentPositionOnGameBoard, playerName, playerIndex, squareOwners, gameSquares,
-                    playersMoney, squaresPrice, numberOfPlayers, playersNames, squareIndex, squareName, squaresRent, lostPlayers);
+                    playersMoney, squaresPrice, numberOfPlayers, playersNames, squareIndex, squareName, lostPlayers);
         }
 
         else if(squareOwners.get(squareIndex) == null &&
@@ -476,8 +473,7 @@ public class Main {
                 squaresPrice.get(squareIndex) != null &&
                 (playersMoney.get(playerIndex) > squaresRent.get(squareIndex))) {
 
-            playerIsOnOwnedSquareWithEnoughMoney(playerCurrentPositionOnGameBoard, playerName, playerIndex, squareOwners, gameSquares,
-                    playersMoney, squaresPrice, numberOfPlayers, playersNames, squareIndex, squareName, squaresRent);
+            playerIsOnOwnedSquareWithEnoughMoney(playerIndex, squareOwners, playersMoney, playersNames, squareIndex, squaresRent);
         }
 
         else if (squareIndex != 13 && squareIndex != 29 &&
@@ -490,7 +486,7 @@ public class Main {
 
             System.out.println("\nYou don't have enough money to pay rent to  \"" +  squareOwnerName + "\".");
 
-            removePlayerFromGame(playerIndex, playerName, numberOfPlayers, squareOwners, lostPlayers, playersNames);
+            removePlayerFromGame(playerIndex, playerName, squareOwners, lostPlayers);
 
         }
 
@@ -498,60 +494,51 @@ public class Main {
                 squareOwners.get(squareIndex).equals(playerName) &&
                 squaresPrice.get(squareIndex) != null) {
 
-            playerIsOnHisOwnSquare(playerCurrentPositionOnGameBoard, playerName, playerIndex, squareOwners, gameSquares,
-                    playersMoney, squaresPrice, numberOfPlayers, playersNames, squareIndex, squareName, squaresRent);
+            playerIsOnHisOwnSquare(gameSquares, squareIndex);
         }
 
         else if(squareIndex == 8 || squareIndex == 23 || squareIndex == 37) {
 
-            playerIsOnChanceSquare(playerCurrentPositionOnGameBoard, playerName, playerIndex, squareOwners, gameSquares,
-                    playersMoney, squaresPrice, numberOfPlayers, playersNames, squareIndex, squareName, squaresRent,
-                    chanceCards, lostPlayers);
+            playerIsOnChanceSquare(playerCurrentPositionOnGameBoard, playerName, playerIndex, squareOwners,
+                    playersMoney, squareIndex, chanceCards, lostPlayers);
         }
 
         else if(squareIndex == 3 || squareIndex == 18 || squareIndex == 34) {
 
-            playerIsOnCommunityChestSquare(playerCurrentPositionOnGameBoard, playerName, playerIndex, squareOwners, gameSquares,
-                    playersMoney, squaresPrice, numberOfPlayers, playersNames, squareIndex, squareName, squaresRent,
-                    communityChestCards, lostPlayers);
+            playerIsOnCommunityChestSquare(playerName, playerIndex, squareOwners, playersMoney, communityChestCards, lostPlayers);
         }
 
         else if(squareIndex == 5) {
 
-            playerIsOnIncomeTaxSquare(playerCurrentPositionOnGameBoard, playerName, playerIndex, squareOwners, gameSquares,
-                    playersMoney, squaresPrice, numberOfPlayers, playersNames, squareIndex, squareName, lostPlayers);
+            playerIsOnIncomeTaxSquare(playerName, playerIndex, squareOwners, playersMoney, lostPlayers);
         }
 
         else if(squareIndex == 11) {
 
-            playerIsOnJustVisitingSquare(playerCurrentPositionOnGameBoard, playerName, playerIndex, squareOwners, gameSquares,
-                    playersMoney, squaresPrice, numberOfPlayers, playersNames, squareIndex, squareName);
+            playerIsOnJustVisitingSquare();
         }
 
         else if(squareIndex == 21) {
 
-            playerIsOnFreeParkingSquare(playerCurrentPositionOnGameBoard, playerName, playerIndex, squareOwners, gameSquares,
-                    playersMoney, squaresPrice, numberOfPlayers, playersNames, squareIndex, squareName);
+            playerIsOnFreeParkingSquare();
         }
 
         else if(squareIndex == 31) {
 
-            goToJail(playerCurrentPositionOnGameBoard, playerName, playerIndex, squareOwners, gameSquares,
-                    playersMoney, squaresPrice, numberOfPlayers, playersNames, squareIndex, squareName, squaresRent);
+            goToJail(playerCurrentPositionOnGameBoard, playerName);
         }
 
         else if(squareIndex == 39) {
 
-            playerIsOnSuperTaxSquare(playerCurrentPositionOnGameBoard, playerName, playerIndex, squareOwners, gameSquares,
-                    playersMoney, squaresPrice, numberOfPlayers, playersNames, squareIndex, squareName, lostPlayers);
+            playerIsOnSuperTaxSquare(playerName, playerIndex, squareOwners, playersMoney, lostPlayers);
         }
 
         else if((squareIndex == 13 || squareIndex == 29) &&
                 squareOwners.get(squareIndex) != null &&
                 !squareOwners.get(squareIndex).equals(playerName)) {
 
-            playerIsOnUtilitySquare(playerCurrentPositionOnGameBoard, playerName, playerIndex, squareOwners, gameSquares,
-                    playersMoney, squaresPrice, numberOfPlayers, playersNames, squareIndex, squareName, squaresRent, lostPlayers);
+            playerIsOnUtilitySquare(playerName, playerIndex, squareOwners, playersMoney, playersNames,
+                    squareIndex, squaresRent, lostPlayers);
         }
 
     }
@@ -565,7 +552,6 @@ public class Main {
                                                               int numberOfPlayers,
                                                               HashMap<Integer, String> playersNames,
                                                               int squareIndex, String squareName,
-                                                              HashMap<Integer, Integer> squaresRent,
                                                               ArrayList<Integer> lostPlayers) {
         System.out.println("\nYour options now are: ");
 
@@ -587,7 +573,7 @@ public class Main {
 
                 playerIsOnUnownedSquareWithEnoughMoney( playerCurrentPositionOnGameBoard, playerName, playerIndex,
                         squareOwners, gameSquares, playersMoney,  squaresPrice, numberOfPlayers,  playersNames,
-                        squareIndex, squareName, squaresRent, lostPlayers);
+                        squareIndex, squareName, lostPlayers);
             }
 
             switch (playerChoice) {
@@ -616,7 +602,7 @@ public class Main {
 
             playerIsOnUnownedSquareWithEnoughMoney( playerCurrentPositionOnGameBoard, playerName, playerIndex,
                      squareOwners, gameSquares, playersMoney,  squaresPrice, numberOfPlayers,  playersNames,
-                     squareIndex, squareName, squaresRent, lostPlayers);
+                     squareIndex, squareName, lostPlayers);
         }
     }
 
@@ -769,15 +755,11 @@ public class Main {
         return false;
     }
 
-    public static void playerIsOnOwnedSquareWithEnoughMoney(HashMap<String, Integer> playerCurrentPositionOnGameBoard,
-                                                            String playerName, int playerIndex,
+    public static void playerIsOnOwnedSquareWithEnoughMoney(int playerIndex,
                                                             HashMap<Integer, String> squareOwners,
-                                                            HashMap<Integer, String> gameSquares,
                                                             HashMap<Integer, Integer> playersMoney,
-                                                            HashMap<Integer, Integer> squaresPrice,
-                                                            int numberOfPlayers,
                                                             HashMap<Integer, String> playersNames,
-                                                            int squareIndex, String squareName,
+                                                            int squareIndex,
                                                             HashMap<Integer, Integer> squaresRent) {
 
         System.out.println("\nYour options now are: ");
@@ -795,9 +777,7 @@ public class Main {
             if (playerChoice != 1) {
                 System.out.println("\nWrong input! You must select one of the options listed! Try again!");
 
-                playerIsOnOwnedSquareWithEnoughMoney( playerCurrentPositionOnGameBoard, playerName, playerIndex,
-                        squareOwners, gameSquares, playersMoney,  squaresPrice, numberOfPlayers,  playersNames,
-                        squareIndex, squareName, squaresRent);
+                playerIsOnOwnedSquareWithEnoughMoney(playerIndex, squareOwners, playersMoney, playersNames, squareIndex, squaresRent);
             }
 
             switch (playerChoice) {
@@ -821,9 +801,7 @@ public class Main {
         catch (InputMismatchException e) {
             System.out.println("\nWrong input! You must select one of the options listed! Try again!");
 
-            playerIsOnOwnedSquareWithEnoughMoney( playerCurrentPositionOnGameBoard, playerName, playerIndex,
-                    squareOwners, gameSquares, playersMoney,  squaresPrice, numberOfPlayers,  playersNames,
-                    squareIndex, squareName, squaresRent);
+            playerIsOnOwnedSquareWithEnoughMoney(playerIndex, squareOwners, playersMoney, playersNames, squareIndex, squaresRent);
         }
     }
 
@@ -840,16 +818,7 @@ public class Main {
         return playerIndex;
     }
 
-    public static void playerIsOnHisOwnSquare(HashMap<String, Integer> playerCurrentPositionOnGameBoard,
-                                              String playerName, int playerIndex,
-                                              HashMap<Integer, String> squareOwners,
-                                              HashMap<Integer, String> gameSquares,
-                                              HashMap<Integer, Integer> playersMoney,
-                                              HashMap<Integer, Integer> squaresPrice,
-                                              int numberOfPlayers,
-                                              HashMap<Integer, String> playersNames,
-                                              int squareIndex, String squareName,
-                                              HashMap<Integer, Integer> squaresRent) {
+    public static void playerIsOnHisOwnSquare(HashMap<Integer, String> gameSquares, int squareIndex) {
 
         System.out.println("\nYour options now are: ");
 
@@ -865,9 +834,7 @@ public class Main {
             if (playerChoice != 1) {
                 System.out.println("\nWrong input! You must select one of the options listed! Try again!");
 
-                playerIsOnHisOwnSquare( playerCurrentPositionOnGameBoard, playerName, playerIndex,
-                        squareOwners, gameSquares, playersMoney,  squaresPrice, numberOfPlayers,  playersNames,
-                        squareIndex, squareName, squaresRent);
+                playerIsOnHisOwnSquare(gameSquares, squareIndex);
             }
 
             switch (playerChoice) {
@@ -880,22 +847,15 @@ public class Main {
         catch (InputMismatchException e) {
             System.out.println("\nWrong input! You must select one of the options listed! Try again!");
 
-            playerIsOnHisOwnSquare( playerCurrentPositionOnGameBoard, playerName, playerIndex,
-                    squareOwners, gameSquares, playersMoney,  squaresPrice, numberOfPlayers,  playersNames,
-                    squareIndex, squareName, squaresRent);
+            playerIsOnHisOwnSquare(gameSquares, squareIndex);
         }
     }
 
     public static void playerIsOnChanceSquare(HashMap<String, Integer> playerCurrentPositionOnGameBoard,
                                               String playerName, int playerIndex,
                                               HashMap<Integer, String> squareOwners,
-                                              HashMap<Integer, String> gameSquares,
                                               HashMap<Integer, Integer> playersMoney,
-                                              HashMap<Integer, Integer> squaresPrice,
-                                              int numberOfPlayers,
-                                              HashMap<Integer, String> playersNames,
-                                              int squareIndex, String squareName,
-                                              HashMap<Integer, Integer> squaresRent,
+                                              int squareIndex,
                                               Stack<String> chanceCards,
                                               ArrayList<Integer> lostPlayers) {
 
@@ -920,7 +880,7 @@ public class Main {
                 playersMoney.replace(playerIndex, updatePlayerMoney);
             }
 
-            else removePlayerFromGame(playerIndex, playerName, numberOfPlayers, squareOwners, lostPlayers, playersNames);
+            else removePlayerFromGame(playerIndex, playerName, squareOwners, lostPlayers);
         }
 
         else if(cardText.equals("Bank pays you dividend of $50")) {
@@ -929,8 +889,7 @@ public class Main {
         }
 
         else if(cardText.equals("Go to Jail! (Go directly to Jail, do not pass Go, do not collect $200)")) {
-            goToJail(playerCurrentPositionOnGameBoard, playerName, playerIndex, squareOwners, gameSquares,
-                    playersMoney, squaresPrice, numberOfPlayers, playersNames, squareIndex, squareName, squaresRent);
+            goToJail(playerCurrentPositionOnGameBoard, playerName);
         }
 
         else if(cardText.equals("Go Back 3 Spaces")) {
@@ -938,8 +897,7 @@ public class Main {
             playerCurrentPositionOnGameBoard.replace(playerName, newPosition);
 
             if(newPosition == 5) {
-                playerIsOnIncomeTaxSquare(playerCurrentPositionOnGameBoard, playerName, playerIndex, squareOwners, gameSquares,
-                        playersMoney, squaresPrice, numberOfPlayers, playersNames, squareIndex, squareName, lostPlayers);
+                playerIsOnIncomeTaxSquare(playerName, playerIndex, squareOwners, playersMoney, lostPlayers);
             }
         }
 
@@ -950,7 +908,7 @@ public class Main {
                 playersMoney.replace(playerIndex, updatePlayerMoney);
             }
 
-            else removePlayerFromGame(playerIndex, playerName, numberOfPlayers, squareOwners, lostPlayers, playersNames);
+            else removePlayerFromGame(playerIndex, playerName, squareOwners, lostPlayers);
         }
 
         System.out.println("--------------------------------------------------------------");
@@ -966,16 +924,9 @@ public class Main {
         else return false;
     }
 
-    public static void playerIsOnCommunityChestSquare(HashMap<String, Integer> playerCurrentPositionOnGameBoard,
-                                                      String playerName, int playerIndex,
+    public static void playerIsOnCommunityChestSquare(String playerName, int playerIndex,
                                                       HashMap<Integer, String> squareOwners,
-                                                      HashMap<Integer, String> gameSquares,
                                                       HashMap<Integer, Integer> playersMoney,
-                                                      HashMap<Integer, Integer> squaresPrice,
-                                                      int numberOfPlayers,
-                                                      HashMap<Integer, String> playersNames,
-                                                      int squareIndex, String squareName,
-                                                      HashMap<Integer, Integer> squaresRent,
                                                       Stack<String> communityChestCards,
                                                       ArrayList<Integer> lostPlayers) {
 
@@ -1003,7 +954,7 @@ public class Main {
                 playersMoney.replace(playerIndex, updatePlayerMoney);
             }
 
-            else removePlayerFromGame(playerIndex, playerName, numberOfPlayers, squareOwners, lostPlayers, playersNames);
+            else removePlayerFromGame(playerIndex, playerName, squareOwners, lostPlayers);
         }
 
         else if(cardText.equals("You inherit $100.")) {
@@ -1022,21 +973,15 @@ public class Main {
                 playersMoney.replace(playerIndex, updatePlayerMoney);
             }
 
-            else removePlayerFromGame(playerIndex, playerName, numberOfPlayers, squareOwners, lostPlayers, playersNames);
+            else removePlayerFromGame(playerIndex, playerName, squareOwners, lostPlayers);
         }
 
         System.out.println("--------------------------------------------------------------");
     }
 
-    public static void playerIsOnIncomeTaxSquare(HashMap<String, Integer> playerCurrentPositionOnGameBoard,
-                                                 String playerName, int playerIndex,
+    public static void playerIsOnIncomeTaxSquare(String playerName, int playerIndex,
                                                  HashMap<Integer, String> squareOwners,
-                                                 HashMap<Integer, String> gameSquares,
                                                  HashMap<Integer, Integer> playersMoney,
-                                                 HashMap<Integer, Integer> squaresPrice,
-                                                 int numberOfPlayers,
-                                                 HashMap<Integer, String> playersNames,
-                                                 int squareIndex, String squareName,
                                                  ArrayList<Integer> lostPlayers) {
 
         System.out.println("\nYou have to pay the bank $ 200!");
@@ -1047,48 +992,26 @@ public class Main {
             System.out.println("--------------------------------------------------------------");
         }
 
-        else removePlayerFromGame(playerIndex, playerName, numberOfPlayers, squareOwners, lostPlayers, playersNames);
+        else removePlayerFromGame(playerIndex, playerName, squareOwners, lostPlayers);
     }
 
-    public static void playerIsOnJustVisitingSquare(HashMap<String, Integer> playerCurrentPositionOnGameBoard,
-                                                    String playerName, int playerIndex,
-                                                    HashMap<Integer, String> squareOwners,
-                                                    HashMap<Integer, String> gameSquares,
-                                                    HashMap<Integer, Integer> playersMoney,
-                                                    HashMap<Integer, Integer> squaresPrice,
-                                                    int numberOfPlayers,
-                                                    HashMap<Integer, String> playersNames,
-                                                    int squareIndex, String squareName) {
+    public static void playerIsOnJustVisitingSquare() {
 
         System.out.println("\nYou are just visiting the prison! (You don't have to do anything.)");
 
         System.out.println("--------------------------------------------------------------");
     }
 
-    public static void playerIsOnFreeParkingSquare(HashMap<String, Integer> playerCurrentPositionOnGameBoard,
-                                                   String playerName, int playerIndex,
-                                                   HashMap<Integer, String> squareOwners,
-                                                   HashMap<Integer, String> gameSquares,
-                                                   HashMap<Integer, Integer> playersMoney,
-                                                   HashMap<Integer, Integer> squaresPrice,
-                                                   int numberOfPlayers,
-                                                   HashMap<Integer, String> playersNames,
-                                                   int squareIndex, String squareName) {
+    public static void playerIsOnFreeParkingSquare() {
 
         System.out.println("\nYou are in the free car park! (You don't have to do anything.)");
 
         System.out.println("--------------------------------------------------------------");
     }
 
-    public static void playerIsOnSuperTaxSquare(HashMap<String, Integer> playerCurrentPositionOnGameBoard,
-                                                String playerName, int playerIndex,
+    public static void playerIsOnSuperTaxSquare(String playerName, int playerIndex,
                                                 HashMap<Integer, String> squareOwners,
-                                                HashMap<Integer, String> gameSquares,
                                                 HashMap<Integer, Integer> playersMoney,
-                                                HashMap<Integer, Integer> squaresPrice,
-                                                int numberOfPlayers,
-                                                HashMap<Integer, String> playersNames,
-                                                int squareIndex, String squareName,
                                                 ArrayList<Integer> lostPlayers) {
 
         System.out.println("\nYou have to pay the bank $ 100!");
@@ -1099,18 +1022,14 @@ public class Main {
             System.out.println("--------------------------------------------------------------");
         }
 
-        else removePlayerFromGame(playerIndex, playerName, numberOfPlayers, squareOwners, lostPlayers, playersNames);
+        else removePlayerFromGame(playerIndex, playerName, squareOwners, lostPlayers);
     }
 
-    public static void playerIsOnUtilitySquare(HashMap<String, Integer> playerCurrentPositionOnGameBoard,
-                                               String playerName, int playerIndex,
+    public static void playerIsOnUtilitySquare(String playerName, int playerIndex,
                                                HashMap<Integer, String> squareOwners,
-                                               HashMap<Integer, String> gameSquares,
                                                HashMap<Integer, Integer> playersMoney,
-                                               HashMap<Integer, Integer> squaresPrice,
-                                               int numberOfPlayers,
                                                HashMap<Integer, String> playersNames,
-                                               int squareIndex, String squareName,
+                                               int squareIndex,
                                                HashMap<Integer, Integer> squaresRent,
                                                ArrayList<Integer> lostPlayers) {
 
@@ -1138,29 +1057,19 @@ public class Main {
             System.out.println("--------------------------------------------------------------");
         }
 
-        else removePlayerFromGame(playerIndex, playerName, numberOfPlayers, squareOwners, lostPlayers, playersNames);
+        else removePlayerFromGame(playerIndex, playerName, squareOwners, lostPlayers);
 
     }
 
-    public static void goToJail(HashMap<String, Integer> playerCurrentPositionOnGameBoard,
-                                String playerName, int playerIndex,
-                                HashMap<Integer, String> squareOwners,
-                                HashMap<Integer, String> gameSquares,
-                                HashMap<Integer, Integer> playersMoney,
-                                HashMap<Integer, Integer> squaresPrice,
-                                int numberOfPlayers,
-                                HashMap<Integer, String> playersNames,
-                                int squareIndex, String squareName,
-                                HashMap<Integer, Integer> squaresRent) {
+    public static void goToJail(HashMap<String, Integer> playerCurrentPositionOnGameBoard, String playerName) {
 
         System.out.println("\nYou go to jail and will miss three moves!");
         playerCurrentPositionOnGameBoard.replace(playerName, 31);
         System.out.println("--------------------------------------------------------------");
     }
 
-    public static void removePlayerFromGame(int playerIndex, String playerName, int numberOfPlayers,
-                                            HashMap<Integer, String> squareOwners, ArrayList<Integer> lostPlayers,
-                                            HashMap<Integer, String> playersNames) {
+    public static void removePlayerFromGame(int playerIndex, String playerName,
+                                            HashMap<Integer, String> squareOwners, ArrayList<Integer> lostPlayers) {
 
         System.out.println("\nYou must leave the game!");
         System.out.print("Press \"enter\" to leave:");
@@ -1176,7 +1085,7 @@ public class Main {
 
         else {
             System.out.println("\nYou pressed wrong button/s! Let's try again...");
-            removePlayerFromGame(playerIndex, playerName, numberOfPlayers, squareOwners, lostPlayers, playersNames);
+            removePlayerFromGame(playerIndex, playerName, squareOwners, lostPlayers);
         }
     }
 
